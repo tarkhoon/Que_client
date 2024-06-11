@@ -11,15 +11,15 @@ import {
 import Button from '../components/button';
 
 
-import {Camera, CameraType} from "expo-camera";
+import {Camera} from "expo-camera/legacy";
 import * as MediaLibrary from "expo-media-library";
 
 export default function  Photo ({onTookPhoto}) {
     const windowWidth = Dimensions.get('window').width;
-
+ 
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
     const [image, setImage] = useState(null);
-    const [type, setType] = useState(CameraType.back);
+    const [type, setType] = useState(Camera.Constants.Type.back);
     const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
     const cameraRef = useRef(null);
    
@@ -87,7 +87,7 @@ export default function  Photo ({onTookPhoto}) {
                     
                 }}>
                     <Button icon={"retweet"} onPress={()=>{
-                        setType(type === CameraType.back ? CameraType.front : CameraType.back)
+                        setType(type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back)
                     }} />
                     <Button icon={"flash"} 
                     color={flash === Camera.Constants.FlashMode.off ? '#f1f1f1' : 'yellow'}
@@ -118,7 +118,7 @@ export default function  Photo ({onTookPhoto}) {
                 }
             </View>
             
-        </View>Type
+        </View>
 
     </View>
   );

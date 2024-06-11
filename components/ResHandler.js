@@ -1,5 +1,5 @@
 import axios from 'axios';
-const host = 'http://130.193.55.52'
+const host = 'http://158.160.11.180'
 
 export async function uploadPhoto(image){
     

@@ -6,7 +6,6 @@ export default function EventSourcing (user) {
     const [messages, setMessages] = useState([]);
     const [value, setValue] = useState('');
 
-
     useEffect(() => {
         subscribe()
     }, [])

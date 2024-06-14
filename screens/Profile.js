@@ -7,38 +7,57 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  TextInput
+  TextInput,
 } from "react-native";
 import { getUserInfo } from "../components/ResHandler";
 import { Footer } from "../components/Footer";
 import ProfileLent from "../components/ProfileLent";
 import Button from "../components/button";
 import { updateAbout } from "../components/ResHandler";
+import { Entypo } from "@expo/vector-icons";
+import Photo from "./Photo";
 const numColumns = 3;
 
-
-const Profile = ({navigation, route}) => {
+const Profile = ({ navigation, route }) => {
   const user = route.params?.user;
-  const [usInfo, setUsInfo]=useState(null)
-  const [editAbout,setEditAbout]=useState(false)
-  const [about,setAbout]=useState("")
-  async function getInfo(){
-    const temp = await getUserInfo(user)
-    setUsInfo(temp)
+  const [usInfo, setUsInfo] = useState(null);
+  const [editAbout, setEditAbout] = useState(false);
+  const [about, setAbout] = useState(null);
+  const [nick, setNick] = useState(null);
+  const [name, setName] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+  const [posts, setPosts] = useState(null);
+  const [subscribers, setSubscribers] = useState(null);
+  const [subscribes, setSubscribes] = useState(null);
+  const [takingPhoto, setTakingPhoto] = useState(false);
+  async function getInfo() {
+    const temp = await getUserInfo(user);
+    console.log(temp);
+    setUsInfo(temp);
+    setNick(temp[0].nickname);
+    setName(temp[0].name);
+    setAbout(temp[0].about);
+    setAvatar(temp[0].avatar_uri);
+    setPosts(temp[0].posts);
+    setSubscribers(temp[0].subscribers);
+    setSubscribes(temp[0].subscribes);
   }
 
-  useEffect(()=>{
-    getInfo()
-  },[])
-  const changeEditing = ()=>{
-    setEditAbout(!editAbout)
-    setAbout("")
-  }
-  const changeAbout = ()=>{
-    updateAbout(about,user);
-    getInfo()
-    changeEditing()
-  }
+  useEffect(() => {
+    getInfo();
+  }, []);
+  const changeEditing = () => {
+    setEditAbout(!editAbout);
+  };
+  const changeTakingPhoto = () => {
+    setTakingPhoto(!takingPhoto);
+  };
+  const changeAbout = () => {
+    updateAbout(about, user);
+    getInfo();
+    changeEditing();
+  };
+  function updateAvatar(photo) {}
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -46,7 +65,6 @@ const Profile = ({navigation, route}) => {
           <Image
             style={styles.menu}
             source={require("../assets/header-icons/menu.png")}
-
           />
         </TouchableOpacity>
       ),
@@ -54,129 +72,144 @@ const Profile = ({navigation, route}) => {
   }, [navigation]);
   return (
     <View style={styles.main}>
-      <View
-        style={{ flex:1, backgroundColor: "#eee" }}
-      >
-        <View style={styles.profile}>
-          <View style={styles.head}>
-            <View style={styles.bgFill}>
-              <Image
-                style={styles.filler}
-                source={require("../assets/rec4.png")}
-              />
-              <Text style={styles.prName}>
-              {usInfo? usInfo[0].nickname : ""}
-              </Text>
-            </View>
-            <View style={styles.desc}>
-              <Image
-                style={styles.profPic}
-                source={require("../assets/footer-icons/Profile.png")}
-              />
-              <View style={styles.descText}>
-                <View>
-                  <Text style={styles.usName}>
-                  {usInfo? usInfo[0].name : ""}
-                  </Text>
-                </View>
-                
-                  {!editAbout?
-                  <TouchableOpacity style={{flexDirection:'row'}} onPress={changeEditing}>
-                  
-                  {usInfo? 
-                  
-                  <Text style={styles.newInfo}>
-                  {usInfo[0].about? usInfo[0].about: "Укажите информацию о себе"}
-                  </Text>: <Text style={styles.newInfo}>"Укажите информацию о себе"</Text>}
-                  <View style={{marginTop:-12,marginLeft:6}}>
-                  <Button                     
-                    icon="edit" 
-                    title={''}
-                    color= {'#FF440'}
-                    size={12}
-                    />
-                    </View>
-                  </TouchableOpacity>
-                  :
-                  <View style={styles.editAbout}>
-                    <TextInput
-                      style={styles.input}
-                      multiline
-                      blurOnSubmit
-                      onChangeText={(text) => setAbout(text)}
-                      defaultValue={usInfo[0].about? usInfo[0].about: "Укажите информацию о себе"}
-                      
-                  />
-                  <View style={styles.submit}>
-                  <Button  
-                        style={{width:'40%',alignItems:'center',paddingBottom:10}}
-                        title={'Отмена'}
-                        color= {'#FF4401'}
-                        onPress={changeEditing}
-                        
-                    /> 
-                    <Button  
-                        style={{width:'40%',alignItems:'center',paddingBottom:10}}
-                        title={'Сохранить'}
-                        color= {'#59AD58'}
-                        onPress={changeAbout}
-                        
-                    /> 
-                    
+      {takingPhoto ? (
+        <Photo />
+      ) : (
+        <View style={{ flex: 1, backgroundColor: "#eee" }}>
+          <View style={styles.profile}>
+            <View style={styles.head}>
+              <View style={styles.bgFill}>
+                <Image
+                  style={styles.filler}
+                  source={require("../assets/rec4.png")}
+                />
+                <Text style={styles.prName}>{nick ? nick : ""}</Text>
+              </View>
+              <View style={styles.desc}>
+                <TouchableOpacity onPress={changeTakingPhoto}>
+                  <Image style={styles.profPic} source={{ uri: avatar }} />
+                </TouchableOpacity>
+                <View style={styles.descText}>
+                  <View>
+                    <Text style={styles.usName}>{name ? name : ""}</Text>
                   </View>
-                </View>}
-                <View style={styles.pubButton}>
-                  <TouchableOpacity onPress={() => navigation.navigate("Publish")}>
-                  <Text style={styles.Public}>
-                    Опубликовать
-                  </Text>
-                  </TouchableOpacity>
+
+                  {!editAbout ? (
+                    <TouchableOpacity
+                      style={{ flexDirection: "row" }}
+                      onPress={changeEditing}
+                    >
+                      {usInfo ? (
+                        <Text style={styles.newInfo}>
+                          {about ? about : "Укажите информацию о себе"}
+                        </Text>
+                      ) : (
+                        <Text style={styles.newInfo}>
+                          "Укажите информацию о себе"
+                        </Text>
+                      )}
+                      <View style={{ marginTop: -12, marginLeft: 6 }}>
+                        <Button
+                          icon="edit"
+                          title={""}
+                          color={"#FF440"}
+                          size={12}
+                          onPress={changeEditing}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <View style={styles.editAbout}>
+                      <TextInput
+                        style={styles.input}
+                        multiline
+                        blurOnSubmit
+                        onChangeText={(text) => setAbout(text)}
+                        defaultValue={
+                          about ? about : "Укажите информацию о себе"
+                        }
+                      />
+                      <View style={styles.submit}>
+                        <Button
+                          style={{
+                            width: "40%",
+                            alignItems: "center",
+                            paddingBottom: 10,
+                          }}
+                          title={"Отмена"}
+                          color={"#FF4401"}
+                          onPress={changeEditing}
+                        />
+                        <Button
+                          style={{
+                            width: "40%",
+                            alignItems: "center",
+                            paddingBottom: 10,
+                          }}
+                          title={"Сохранить"}
+                          color={"#59AD58"}
+                          onPress={changeAbout}
+                        />
+                      </View>
+                    </View>
+                  )}
+                  <View style={styles.pubButton}>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate("Publish")}
+                    >
+                      <Text style={styles.Public}>Опубликовать</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-        <View style={styles.stats}>
+          <View style={styles.stats}>
             <View style={styles.statBox}>
-              <Text style={styles.stNum}>{usInfo? usInfo[0].posts : ""}</Text>
+              <Text style={styles.stNum}>{posts ? posts : 0}</Text>
               <Text style={styles.stText}>Публикации</Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.stNum}>{usInfo? usInfo[0].subscribers : ""}</Text>
+              <Text style={styles.stNum}>{subscribers ? subscribers : 0}</Text>
               <Text style={styles.stText}>Подписчики</Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.stNum}>{usInfo? usInfo[0].subscribes : ""}</Text>
+              <Text style={styles.stNum}>{subscribes ? subscribes : 0}</Text>
               <Text style={styles.stText}>Подписки</Text>
             </View>
           </View>
-        <View style={styles.posts}>
-          <ProfileLent user={user}/>
+          <View style={styles.posts}>
+            <ProfileLent user={nick} />
+          </View>
         </View>
-      </View>
-      <Footer navigation = {navigation} current={[null,null,null,1]}/>
+      )}
+      <Footer
+        navigation={navigation}
+        avatar={avatar}
+        current={[null, null, null, 1]}
+      />
     </View>
   );
-}
-export default Profile
+};
+export default Profile;
 const styles = StyleSheet.create({
-  editAbout:{
-    width:'100%',
+  editAbout: {
+    width: "100%",
   },
-  submit:{
-    flexDirection:'row',
-    justifyContent:'space-around',
-    width:'100%'
+  submit: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
   },
-  input:{
-    width: Dimensions.get('window').width - 20,
-        
+  input: {
+    width: Dimensions.get("window").width - 20,
+
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 10,
-    borderWidth:1,
-    borderColor: '#a1a1a1',
-    padding:7
+    borderWidth: 1,
+    borderColor: "#a1a1a1",
+    padding: 7,
   },
   main: {
     flex: 1,
@@ -219,11 +252,14 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: "white",
     borderRadius: 51,
+    width: 96,
+    height: 96,
+    backgroundColor: "white",
   },
   stats: {
     width: "100%",
-    minHeight:50,
-    maxHeight:100,
+    minHeight: 50,
+    maxHeight: 100,
     backgroundColor: "white",
     marginTop: 8,
     borderRadius: 24,
@@ -249,7 +285,7 @@ const styles = StyleSheet.create({
   newInfo: {
     fontSize: 12,
     color: "#FF4401",
-    textAlign:'center'
+    textAlign: "center",
   },
   Public: {
     color: "#FF4401",
@@ -267,21 +303,22 @@ const styles = StyleSheet.create({
   statBox: {
     flex: 1,
     alignItems: "center",
-    paddingVertical:5
+    paddingVertical: 5,
   },
   stNum: {
-    fontSize: 20*Dimensions.get("screen").height/900,
+    fontSize: (20 * Dimensions.get("screen").height) / 900,
   },
   stText: {
-    fontSize: 14*Dimensions.get("screen").height/1000,
+    fontSize: (14 * Dimensions.get("screen").height) / 1000,
     color: "#777777",
   },
   posts: {
-    paddingTop:10,
+    paddingTop: 10,
     borderTopRightRadius: 24,
     borderTopLeftRadius: 24,
     backgroundColor: "white",
     marginTop: 10,
+    height: "100%",
   },
   tag: {
     textAlign: "center",
@@ -315,5 +352,10 @@ const styles = StyleSheet.create({
   postPicture: {
     width: "100%",
     height: Dimensions.get("window").width / numColumns,
+  },
+  editAv: {
+    position: "absolute",
+    top: 25,
+    left: Dimensions.get("screen").width / 2 + 30,
   },
 });

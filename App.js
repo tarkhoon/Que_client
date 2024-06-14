@@ -1,26 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { LogBox } from 'react-native';
+import { LogBox } from "react-native";
 import Rec from "./screens/Rec";
 
 import Profile from "./screens/Profile";
 
 import Publish from "./screens/Publishing";
 import Main from "./screens/Main";
-
 import Login from "./screens/Login";
 import Reg from "./screens/Registration";
 
-import {firebase} from "./config";
+import { firebase } from "./config";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { getUserInfo } from "./components/ResHandler";
 const Stack = createStackNavigator();
 
-
-
-function App(){
-
+function App() {
   const [stories, setStories] = useState([
     {
       name: "#Que",
@@ -54,28 +49,28 @@ function App(){
     },
   ]);
 
+  LogBox.ignoreAllLogs(true);
 
-  //LogBox.ignoreAllLogs(true);
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
 
-  const [initializing, setInitializing]=useState(true);
-  const [user,setUser] = useState();
-  const [data, setData] = useState();
   async function onAuthStateChanged(user) {
     setUser(user);
-    if(initializing) setInitializing(false);
+
+    if (initializing) setInitializing(false);
   }
 
   useEffect(() => {
     const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  },[]);
-  if(initializing) return null;
 
-  if(!user){
-    
-    return(
+    return subscriber;
+  }, []);
+  if (initializing) return null;
+
+  if (!user) {
+    return (
       <Stack.Navigator>
-      <Stack.Screen
+        <Stack.Screen
           name="Login"
           component={Login}
           options={{
@@ -104,16 +99,17 @@ function App(){
           }}
         />
       </Stack.Navigator>
-    )
-  }else{
-  
-  return(
-
-  <Stack.Navigator>
+    );
+  } else {
+    return (
+      <Stack.Navigator>
         <Stack.Screen
           name="Main"
           component={Main}
-          initialParams={{ storie: stories, user:user.email}}
+          initialParams={{
+            storie: stories,
+            user: user.email,
+          }}
           options={{
             title: "Главная",
             headerTitleStyle: {
@@ -128,7 +124,7 @@ function App(){
         <Stack.Screen
           name="Publish"
           component={Publish}
-          initialParams={{ user:user.email}}
+          initialParams={{ user: user.email }}
           options={{
             title: "Публикация",
             headerTitleStyle: {
@@ -143,7 +139,7 @@ function App(){
         <Stack.Screen
           name="Profile"
           component={Profile}
-          initialParams={{ user:user.email }}
+          initialParams={{ user: user.email }}
           options={{
             title: "Профиль",
             headerTitleStyle: {
@@ -158,7 +154,7 @@ function App(){
         <Stack.Screen
           name="Rec"
           component={Rec}
-          initialParams={{ user:user.email }}
+          initialParams={{ user: user.email }}
           options={{
             title: "Рекомендации",
             headerTitleStyle: {
@@ -171,16 +167,14 @@ function App(){
           }}
         />
       </Stack.Navigator>
-    )
+    );
   }
 }
 
-
 export default () => {
-  return(
-  <NavigationContainer>
-    <App/>
-    
-  </NavigationContainer>
-  )
-}
+  return (
+    <NavigationContainer>
+      <App />
+    </NavigationContainer>
+  );
+};

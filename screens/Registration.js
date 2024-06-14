@@ -1,16 +1,9 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Switch,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 import { firebase } from "../config";
-import {reg} from "../components/ResHandler"
+import { reg } from "../components/ResHandler";
 const Reg = () => {
   const navigation = useNavigation();
   const [emailInput, setEmailInput] = useState("");
@@ -18,15 +11,10 @@ const Reg = () => {
   const [nicknameInput, setNicknameInput] = useState("");
   const [passInput, setPassInput] = useState("");
   const [isRestaurant, setIsRestaurant] = useState(false);
-  registerUser = async (
-    emailInput,
-    passInput,
-    nameInput,
-    nicknameInput
-  ) => {
-    reg(nameInput,nicknameInput,emailInput,isRestaurant)
-    console.log(nameInput)
-    console.log(nicknameInput)
+  registerUser = async (emailInput, passInput, nameInput, nicknameInput) => {
+    reg(nameInput, nicknameInput, emailInput, isRestaurant);
+    console.log(nameInput);
+    console.log(nicknameInput);
     await firebase
       .auth()
       .createUserWithEmailAndPassword(emailInput, passInput)
@@ -38,31 +26,23 @@ const Reg = () => {
             url: "https://mobile-develop-97eb8.firebaseapp.com",
           })
           .then(() => {
-            alert(
-              "Письмо для подтверждения отправлено на почту"
-            );
+            alert("Письмо для подтверждения отправлено на почту");
           })
           .catch((error) => {
             alert(error.message);
           })
           .then(() => {
-            firebase
-              .firestore()
-              .collection("users")
-              .doc(firebase.auth().currentUser.uid)
-              .set({
-                emailInput,
-              });
+            firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).set({
+              emailInput,
+            });
           })
           .catch((error) => {
             alert(error.message);
           });
-          
       })
       .catch((error) => {
         alert(error.message);
       });
-      
   };
   return (
     <View style={styles.main}>
@@ -77,9 +57,7 @@ const Reg = () => {
         <Switch
           value={isRestaurant}
           onValueChange={() => {
-            setIsRestaurant(
-              (isRestaurant) => !isRestaurant
-            );
+            setIsRestaurant((isRestaurant) => !isRestaurant);
             console.log(isRestaurant);
           }}
           trackColor={{ true: "#e1e1e1" }}
@@ -95,88 +73,37 @@ const Reg = () => {
       {isRestaurant ? (
         <View style={{ marginTop: 30 }}>
           <View style={styles.inpadd}>
-            <TextInput
-              style={{ fontSize: 20 }}
-              placeholder="Email"
-              value={emailInput}
-              onChangeText={(text) => setEmailInput(text)}
-            />
+            <TextInput style={{ fontSize: 20 }} placeholder="Email" value={emailInput} onChangeText={(text) => setEmailInput(text)} />
           </View>
           <View style={styles.inpaddPass}>
-            <TextInput
-              style={{ fontSize: 20 }}
-              placeholder="Пароль"
-              value={passInput}
-              onChangeText={(text) => setPassInput(text)}
-              secureTextEntry={true}
-            />
+            <TextInput style={{ fontSize: 20 }} placeholder="Пароль" value={passInput} onChangeText={(text) => setPassInput(text)} secureTextEntry={true} />
           </View>
           <View style={styles.inpadd}>
-            <TextInput
-              style={{ fontSize: 20 }}
-              placeholder="Название заведения"
-              value={nameInput}
-              onChangeText={(text) => setNameInput(text)}
-            />
+            <TextInput style={{ fontSize: 20 }} placeholder="Название заведения" value={nameInput} onChangeText={(text) => setNameInput(text)} />
           </View>
           <View style={styles.inpadd}>
-            <TextInput
-              style={{ fontSize: 20 }}
-              placeholder="Отображаемое имя"
-              value={nicknameInput}
-              onChangeText={(text) =>
-                setNicknameInput(text)
-              }
-            />
+            <TextInput style={{ fontSize: 20 }} placeholder="Отображаемое имя" value={nicknameInput} onChangeText={(text) => setNicknameInput(text)} />
           </View>
         </View>
       ) : (
         <View style={{ marginTop: 30 }}>
           <View style={styles.inpadd}>
-            <TextInput
-              style={{ fontSize: 20 }}
-              placeholder="Email"
-              value={emailInput}
-              onChangeText={(text) => setEmailInput(text)}
-            />
+            <TextInput style={{ fontSize: 20 }} placeholder="Email" value={emailInput} onChangeText={(text) => setEmailInput(text)} />
           </View>
           <View style={styles.inpaddPass}>
-            <TextInput
-              style={{ fontSize: 20 }}
-              placeholder="Пароль"
-              value={passInput}
-              onChangeText={(text) => setPassInput(text)}
-              secureTextEntry={true}
-            />
+            <TextInput style={{ fontSize: 20 }} placeholder="Пароль" value={passInput} onChangeText={(text) => setPassInput(text)} secureTextEntry={true} />
           </View>
           <View style={styles.inpadd}>
-            <TextInput
-              style={{ fontSize: 20 }}
-              placeholder="Ваше имя"
-              value={nameInput}
-              onChangeText={(text) => setNameInput(text)}
-            />
+            <TextInput style={{ fontSize: 20 }} placeholder="Ваше имя" value={nameInput} onChangeText={(text) => setNameInput(text)} />
           </View>
           <View style={styles.inpadd}>
-            <TextInput
-              style={{ fontSize: 20 }}
-              placeholder="Отображаемое имя"
-              value={nicknameInput}
-              onChangeText={(text) =>
-                setNicknameInput(text)
-              }
-            />
+            <TextInput style={{ fontSize: 20 }} placeholder="Отображаемое имя" value={nicknameInput} onChangeText={(text) => setNicknameInput(text)} />
           </View>
         </View>
       )}
 
       <View style={styles.switchPage}>
-        <TouchableOpacity
-          onPress={() =>
-            registerUser(emailInput, passInput, nameInput,nicknameInput)
-          }
-          style={styles.registration}
-        >
+        <TouchableOpacity onPress={() => registerUser(emailInput, passInput, nameInput, nicknameInput)} style={styles.registration}>
           <Text
             style={{
               color: "#FF4401",

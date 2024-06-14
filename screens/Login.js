@@ -1,56 +1,44 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
-import {firebase} from '../config';
+import { firebase } from "../config";
 
 const Login = () => {
   const navigation = useNavigation();
   const [emailInput, setEmailInput] = useState("");
   const [passInput, setPassInput] = useState("");
 
-  const loginUser = async(emailInput, passInput) => {
-    try{
-        await firebase.auth().signInWithEmailAndPassword(emailInput,passInput)
-    }catch(error){
-        alert(error.message)
+  const loginUser = async (emailInput, passInput) => {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(emailInput, passInput);
+    } catch (error) {
+      alert(error.message);
     }
-  }
+  };
   return (
     <View style={styles.main}>
       <View style={styles.inpadd}>
-        <TextInput
-          style={{ fontSize: 20 }}
-          placeholder="Email"
-          value={emailInput}
-          onChangeText={(text) => setEmailInput(text)}
-        />
+        <TextInput style={{ fontSize: 20 }} placeholder="Email" value={emailInput} onChangeText={(text) => setEmailInput(text)} />
       </View>
       <View style={styles.inpaddPass}>
-        <TextInput
-          style={{ fontSize: 20 }}
-          placeholder="Пароль"
-          value={passInput}
-          onChangeText={(text) => setPassInput(text)}
-          secureTextEntry={true}
-        />
-        <TouchableOpacity onPress={() => loginUser(emailInput,passInput)} style={styles.login}>
-            <Text style={{color: "#FF4401", fontSize: 16, fontWeight:"bold"}}>Авторизоваться</Text>
+        <TextInput style={{ fontSize: 20 }} placeholder="Пароль" value={passInput} onChangeText={(text) => setPassInput(text)} secureTextEntry={true} />
+        <TouchableOpacity onPress={() => loginUser(emailInput, passInput)} style={styles.login}>
+          <Text style={{ color: "#FF4401", fontSize: 16, fontWeight: "bold" }}>Авторизоваться</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>{navigation.navigate("Registration")}} style={styles.registration}>
-            <Text style={{color: "#FF4401", fontSize: 16, fontWeight:"bold"}}>Регистрация</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Registration");
+          }}
+          style={styles.registration}
+        >
+          <Text style={{ color: "#FF4401", fontSize: 16, fontWeight: "bold" }}>Регистрация</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-}
-export default Login
+};
+export default Login;
 const styles = StyleSheet.create({
   main: {
     flex: 1,
@@ -66,12 +54,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     width: 295,
     paddingHorizontal: 20,
-    paddingTop:10,
+    paddingTop: 10,
     backgroundColor: "#fff",
     borderColor: "black",
     borderRadius: 25,
     borderWidth: 1,
-    height: 50
+    height: 50,
   },
   inpaddPass: {
     position: "absolute",
@@ -80,12 +68,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     width: 295,
     paddingHorizontal: 20,
-    paddingTop:10,
+    paddingTop: 10,
     backgroundColor: "#fff",
     borderColor: "black",
     borderRadius: 25,
     borderWidth: 1,
-    height: 50
+    height: 50,
   },
   inputContainer: {
     backgroundColor: "#fff",
@@ -100,25 +88,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  login:{
+  login: {
     left: 30,
-    top:40,
+    top: 40,
     width: 200,
     backgroundColor: "#F9E8E1",
     height: 40,
     textAlign: "center",
     justifyContent: "center",
     paddingLeft: 37,
-    borderRadius:8
+    borderRadius: 8,
   },
-  registration:{
+  registration: {
     left: 60,
-    top:90,
+    top: 90,
     width: 200,
     height: 40,
     textAlign: "center",
     justifyContent: "center",
     paddingLeft: 18,
-    borderRadius:8
-  }
+    borderRadius: 8,
+  },
 });

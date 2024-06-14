@@ -1,20 +1,21 @@
-import React from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
 
 import { StatusBar } from "expo-status-bar";
 import Lent from "../components/Lent";
 import Stories from "../components/Stories";
 import { Footer } from "../components/Footer";
-
+import { getUserInfo } from "../components/ResHandler";
 const Main = ({ navigation, route }) => {
   var storiess = route.params?.storie;
-  var user = route.params?.user
+  var user = route.params?.user;
+  const [avatar, setAvatar] = useState();
+  async function getAvatar() {
+    var temp = await getUserInfo(user);
+    setAvatar(temp[0].avatar_uri);
+  }
   React.useLayoutEffect(() => {
+    getAvatar();
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity>
@@ -31,14 +32,17 @@ const Main = ({ navigation, route }) => {
       <StatusBar style="auto" />
 
       <Stories storiess={storiess} />
-      <Lent user = {user}/>
+      <Lent user={user} />
 
-
-      <Footer navigation = {navigation} current={[1,null,null,null]}/>
+      <Footer
+        navigation={navigation}
+        avatar={avatar}
+        current={[1, null, null, null]}
+      />
     </View>
   );
-}
-export default Main
+};
+export default Main;
 const styles = StyleSheet.create({
   main: {
     flex: 1,

@@ -9,22 +9,16 @@ import {
   ScrollView,
 } from "react-native";
 
-
 export default function Stories(storiess) {
-  const [stories, setStories] = useState(
-    Object.values(storiess)[0]
-  );
-  const ListItem = ({item})=>{
-    return(
+  const [stories, setStories] = useState(Object.values(storiess)[0]);
+  const ListItem = ({ item }) => {
+    return (
       <View style={styles.storie}>
-              <Image
-                style={styles.stPic}
-                source={{ uri: item.img }}
-              />
-              <Text style={styles.stText}>{item.name}</Text>
+        <Image style={styles.stPic} source={{ uri: item.img }} />
+        <Text style={styles.stText}>{item.name}</Text>
       </View>
-    )
-  }
+    );
+  };
   return (
     <View style={styles.Stories}>
       <ScrollView
@@ -39,9 +33,7 @@ export default function Stories(storiess) {
         <FlatList
           contentContainerStyle={{ flexDirection: "row" }}
           data={stories}
-          renderItem={({ item }) => (
-            <ListItem item={item}/>
-          )}
+          renderItem={({ item }) => <ListItem item={item} />}
         />
       </ScrollView>
     </View>
@@ -50,7 +42,7 @@ export default function Stories(storiess) {
 
 const styles = StyleSheet.create({
   Stories: {
-    marginTop:15,
+    marginTop: 15,
     width: "100%",
     height: 114,
   },
